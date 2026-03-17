@@ -1,0 +1,65 @@
+classDiagram
+    class Task {
+        +String name
+        +int duration_minutes
+        +int priority
+        +String category
+        +bool is_completed
+        +String notes
+        +String scheduled_time
+        +String recurrence
+        +datetime next_occurrence
+        +int HIGH_PRIORITY_THRESHOLD$
+        +complete() void
+        +reset() void
+        +is_high_priority() bool
+        +summary() String
+    }
+
+    class Pet {
+        +String name
+        +String species
+        +int age_years
+        +String health_notes
+        +List~Task~ tasks
+        +add_task(task: Task) void
+        +remove_task(task_name: String) void
+        +get_tasks() List~Task~
+        +get_high_priority_tasks() List~Task~
+    }
+
+    class Owner {
+        +String name
+        +String email
+        +int available_minutes_per_day
+        +List~String~ preferences
+        -List~Pet~ _pets
+        +add_pet(pet: Pet) void
+        +remove_pet(pet_name: String) void
+        +get_pets() List~Pet~
+        +set_availability(minutes: int) void
+    }
+
+    class Scheduler {
+        +Owner owner
+        +Pet pet
+        +List~Task~ scheduled_tasks
+        +int total_scheduled_minutes
+        +reset_plan() void
+        +get_all_owner_tasks() List~Task~
+        +generate_plan() List~Task~
+        +sort_by_time() List~Task~
+        +filter_by_pet_name(pet_name: String) List~Task~
+        +filter_by_completion(completed: bool) List~Task~
+        +filter_by_priority(min_priority: int) List~Task~
+        +detect_conflicts() List~String~
+        +fits_in_available_time(tasks: List~Task~) bool
+        +explain_plan() String
+        +get_unscheduled_tasks() List~Task~
+    }
+
+    Owner "1" --> "0..*" Pet : owns
+    Pet "1" --> "0..*" Task : has
+    Scheduler "1" --> "1" Owner : schedules for
+    Scheduler "1" --> "1" Pet : plans care for
+    Scheduler "1" --> "0..*" Task : selects and orders
